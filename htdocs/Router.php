@@ -39,7 +39,7 @@ class Router
         return false;
     }
 
-    private function setRouteControllerByName(string $name) : void
+    private function setRouteControllerByName(string $name)
     {
         $routesJson = json_decode(file_get_contents("routes.json"), true);
         if(isset($routesJson[$name])){

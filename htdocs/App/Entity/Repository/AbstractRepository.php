@@ -3,8 +3,9 @@
 namespace App\Entity\Repository;
 abstract class AbstractRepository implements RepositoryInterface
 {
-    function getConnexion()
+    function getConnexion() : PDOInstance
     {
-        // return connexion pdo
+        $db = connexion::getInstance();
+        return $db->getDbh();
     }
 }
