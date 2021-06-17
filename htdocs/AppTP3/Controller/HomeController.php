@@ -2,12 +2,13 @@
 
 namespace AppTP3\Controller;
 
-class HomeController
+class HomeController #extends AbstractController
 {
 
     public function home()
     {
-        return 'Hello Home';
+        #return $this->render('home.phtml', []);
+        echo "coucou home";
     }
 
 }

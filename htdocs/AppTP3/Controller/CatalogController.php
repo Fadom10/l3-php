@@ -2,7 +2,7 @@
 
 namespace AppTP3\Controller;
 
-class CatalogController
+class CatalogController #extends AbstractController
 {
 
     public function view()

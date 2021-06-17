@@ -37,29 +37,35 @@ class Router
         $controllerAll ="";
         $Json = file_get_contents("routes.json");
         $routes = json_decode($Json, true);
-
+        $int = 0;
         foreach ($routes as $route){
             if($uri == $route['path']){
-                $controllerAll = "AppTP3\Controller\"".$route['controller'];
-                var_dump($controllerAll);
+                $controllerAll = "AppTP3\Controller\\".$route['controller'];
                 break;
             }else{
                 header("HTTP/1.0 404 Not Found");
                 http_response_code(404);
-                echo '404';
-                break;
+                $int = 1;
             }
         }
 
+        if ($int == 1) {
+            echo '404';
+        }else{
 
-        $controles = explode("@", $controllerAll);
+            $controles = explode("@", $controllerAll);
 
-        function redirection($arg, $arg2) {
-            $arg = new $arg;
-            $arg->$arg2;
+            #call_user_func_array("redirection", array($controles[0], $controles[1]));
+
+            $controllerInstance = $controles[0];
+            $method= $controles[1];
+            var_dump($controllerInstance);
+            var_dump($method);
+
+            return(new $controllerInstance())->{$method}();
         }
 
-        call_user_func_array("redirection", array($controles[0], $controles[1]));
+
 
     }
 
