@@ -41,6 +41,7 @@ class Router
         foreach ($routes as $route){
             if($uri == $route['path']){
                 $controllerAll = "AppTP3\Controller\\".$route['controller'];
+                $int = 0;
                 break;
             }else{
                 header("HTTP/1.0 404 Not Found");
@@ -64,8 +65,6 @@ class Router
 
             return(new $controllerInstance())->{$method}();
         }
-
-
 
     }
 

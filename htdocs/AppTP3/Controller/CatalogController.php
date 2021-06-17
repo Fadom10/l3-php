@@ -2,17 +2,19 @@
 
 namespace AppTP3\Controller;
 
-class CatalogController #extends AbstractController
+class CatalogController extends AbstractController
 {
 
     public function view()
     {
-        echo 'Hello view catalog';
+        $list_product = ['johnny', 'hallyday'];
+        echo $this->render('view.phtml', ['products' => $list_product]);
     }
 
     public function viewProduct()
     {
-        echo 'Hello view product';
+        $product = ['johnny'];
+        echo $this->render('viewProduct.phtml', ['product' => $product]);
     }
 
 }

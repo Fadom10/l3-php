@@ -3,12 +3,12 @@
 
 namespace AppTP3\Controller;
 
-
 abstract class AbstractController
 {
-    function render(String $template, array $args = []) : String
+    const TEMPLATE_PATH = '/templates/';
+
+    function render(String $template, array $args = [])
     {
-        // TODO recuperer + afficher template
-        return '';
+        include 'C:\wamp64\www\l3-php\htdocs\\' . self::TEMPLATE_PATH . $template;
     }
 }
