@@ -1,71 +1,52 @@
 <?php
 
-use AppTP3\Controller\CatalogController;
+
 class Router
 {
 
-    /**
-     *
-     */
+    private $controller = null;
+    private $method = null;
+
+    public function __construct()
+    {
+        $this->uri = (isset($_SERVER['REQUEST_URI']))? $_SERVER['REQUEST_URI'] : "/";
+    }
+
     function process()
     {
-        /**
-         * ex http://localhost/
-         *
-         * $uri = /
-         */
-        $uri = $_SERVER['REQUEST_URI'];
-        echo $uri.'<br>';
+        if(!$this->exist()){
+            $this->setRouteControllerByName("notFound");
+        }
+        return (new $this->controller())->{$this->method}();
+    }
 
-        /**
-         * ex http://localhost/catalog
-         *
-         * $uri = /catalog
-         */
+    private function getRoutesConfig() : array
+    {
+        $routesJson = file_get_contents("routes.json");
+        return json_decode($routesJson, true);
+    }
 
-        /**
-         * ex http://localhost/catalog/product
-         *
-         * $uri = /catalog/product
-         */
-
-        /**
-         * mapping entre $uri et routes.json
-         * Prevoir route non connue => 404
-         */
-
-        $controllerAll ="";
-        $Json = file_get_contents("routes.json");
-        $routes = json_decode($Json, true);
-        $int = 0;
-        foreach ($routes as $route){
-            if($uri == $route['path']){
-                $controllerAll = "AppTP3\Controller\\".$route['controller'];
-                $int = 0;
-                break;
-            }else{
-                header("HTTP/1.0 404 Not Found");
-                http_response_code(404);
-                $int = 1;
+    private function exist() : bool
+    {
+        foreach ($this->getRoutesConfig() as $route){
+            if(isset($route['path']) && $route['path'] === $this->uri){
+                $configController = explode('@',$route['controller']);
+                $this->controller = $configController[0];
+                $this->method = $configController[1];
+                return true;
             }
         }
+        return false;
+    }
 
-        if ($int == 1) {
-            echo '404';
-        }else{
-
-            $controles = explode("@", $controllerAll);
-
-            #call_user_func_array("redirection", array($controles[0], $controles[1]));
-
-            $controllerInstance = $controles[0];
-            $method= $controles[1];
-            var_dump($controllerInstance);
-            var_dump($method);
-
-            return(new $controllerInstance())->{$method}();
+    private function setRouteControllerByName(string $name) : void
+    {
+        $routesJson = json_decode(file_get_contents("routes.json"), true);
+        if(isset($routesJson[$name])){
+            $configController = explode('@',$routesJson[$name]['controller']);
+            $this->controller = $configController[0];
+            $this->method = $configController[1];
         }
 
     }
-
 }
